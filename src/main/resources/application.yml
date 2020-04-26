@@ -1,0 +1,2 @@
+logging:
+  config: classpath:kafka-demo-logback-spring.xml
