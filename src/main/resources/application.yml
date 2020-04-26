@@ -1,2 +1,7 @@
+
 logging:
   config: classpath:kafka-demo-logback-spring.xml
+
+spring:
+  profiles:
+    active: prod

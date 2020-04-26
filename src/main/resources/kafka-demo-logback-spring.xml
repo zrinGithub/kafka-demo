@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
 
+    <property name="log.path" value="logs" />
+    <property name="app.name" value="kafka-demo" />
+
     <appender name="consoleApp" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>
@@ -23,7 +26,7 @@
         <!-- 滚动策略 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 路径 -->
-            <fileNamePattern>app_log/log/app.info.%d.log</fileNamePattern>
+            <fileNamePattern>${log.path}/${app.name}_no_error.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 
@@ -40,7 +43,7 @@
         <!-- 设置滚动策略 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 路径 -->
-            <fileNamePattern>app_log/log/app.err.%d.log</fileNamePattern>
+            <fileNamePattern>${log.path}/${app.name}_error.%d.log</fileNamePattern>
 
             <!-- 控制保留的归档文件的最大数量，超出数量就删除旧文件，假设设置每个月滚动，
             且<maxHistory> 是1，则只保存最近1个月的文件，删除之前的旧文件 -->
@@ -48,9 +51,51 @@
 
         </rollingPolicy>
     </appender>
-    <root level="INFO">
-        <appender-ref ref="consoleApp"/>
-        <appender-ref ref="fileInfoApp"/>
-        <appender-ref ref="fileErrorApp"/>
-    </root>
+<!--    <root level="INFO">-->
+<!--        <appender-ref ref="consoleApp"/>-->
+<!--        <appender-ref ref="fileInfoApp"/>-->
+<!--        <appender-ref ref="fileErrorApp"/>-->
+<!--    </root>-->
+
+<!--    若是additivity设为false，则子Logger只会在自己的appender里输出，不会在root的logger的appender里输出（个人可以理解为additivity设为false后，子Logger会覆盖掉root的logger）。-->
+
+    <springProfile name="dev">
+        <logger name="com.zr.kafkademo" level="DEBUG"
+                additivity="false">
+            <appender-ref ref="consoleApp" />
+            <appender-ref ref="fileInfoApp" />
+            <appender-ref ref="fileErrorApp" />
+        </logger>
+        <logger name="org.springframework" level="INFO">
+            <appender-ref ref="consoleApp" />
+            <appender-ref ref="fileInfoApp" />
+            <appender-ref ref="fileErrorApp" />
+        </logger>
+    </springProfile>
+    <springProfile name="test">
+        <logger name="com.zr.kafkademo" level="DEBUG"
+                additivity="false">
+            <appender-ref ref="consoleApp" />
+            <appender-ref ref="fileInfoApp" />
+            <appender-ref ref="fileErrorApp" />
+        </logger>
+        <logger name="org.springframework" level="INFO">
+            <appender-ref ref="consoleApp" />
+            <appender-ref ref="fileInfoApp" />
+            <appender-ref ref="fileErrorApp" />
+        </logger>
+    </springProfile>
+    <springProfile name="prod">
+        <logger name="com.zr.kafkademo" level="INFO"
+                additivity="false">
+            <appender-ref ref="consoleApp" />
+            <appender-ref ref="fileInfoApp" />
+            <appender-ref ref="fileErrorApp" />
+        </logger>
+        <logger name="org.springframework" level="INFO">
+            <appender-ref ref="consoleApp" />
+            <appender-ref ref="fileInfoApp" />
+            <appender-ref ref="fileErrorApp" />
+        </logger>
+    </springProfile>
 </configuration>

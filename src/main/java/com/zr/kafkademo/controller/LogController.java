@@ -1,6 +1,7 @@
 package com.zr.kafkademo.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,12 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 public class LogController {
+    @Value("${customize.test-value}")
+    private String testValue;
+
     @GetMapping("test/log")
-    public void testLogLevel(){
-        log.error("----------LOGGER error----------");
-        log.warn("----------LOGGER warn----------");
-        log.info("----------LOGGER info----------");
-        log.debug("----------LOGGER debug----------");
-        log.trace("----------LOGGER trace----------");
+    public void testLogLevel() {
+        log.error("----------LOGGER error----------" + testValue);
+        log.warn("----------LOGGER warn----------" + testValue);
+        log.info("----------LOGGER info----------" + testValue);
+        log.debug("----------LOGGER debug----------" + testValue);
+        log.trace("----------LOGGER trace----------" + testValue);
     }
 }
